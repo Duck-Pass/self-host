@@ -10,8 +10,6 @@ RUN apt-get update
 RUN apt-get install -y git jq
 
 RUN git clone https://github.com/Duck-Pass/web-client.git .
-RUN git checkout -b dev origin/dev
-RUN git pull
 
 RUN jq ".api |= \"${api_url}\"" ./src/env.json > ./src/env.json.tmp && mv ./src/env.json.tmp ./src/env.json
 
