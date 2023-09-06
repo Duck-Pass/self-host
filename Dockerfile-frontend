@@ -1,0 +1,21 @@
+FROM node:18
+
+ARG api_url="http://duckpass-backend:8001"
+
+ENV API_URL = ${api_url}
+
+WORKDIR /app
+
+RUN apt-get update
+RUN apt-get install -y git jq
+
+RUN git clone https://github.com/Duck-Pass/web-client.git .
+RUN git checkout -b dev origin/dev
+RUN git pull
+
+RUN jq ".api |= \"${api_url}\"" ./src/env.json > ./src/env.json.tmp && mv ./src/env.json.tmp ./src/env.json
+
+RUN npm install
+RUN npm run build
+
+CMD ["npx", "vite", "preview", "--port", "8000", "--host"]

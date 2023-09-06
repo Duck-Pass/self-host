@@ -1,0 +1,46 @@
+version: '3.8'
+networks:
+  duckpass-net:
+    driver: bridge
+services:
+  db:
+    image: 'bitnami/postgresql:14'
+    container_name: duckpass-database
+    environment:
+      - POSTGRESQL_USERNAME=pgsql
+      - POSTGRESQL_PASSWORD=pgsql
+      - POSTGRESQL_DATABASE=duckpass
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./data:/data:ro
+      - ./database.sql:/docker-entrypoint-initdb.d/stage1.sql
+    networks:
+      - duckpass-net
+  web:
+    image: 'duckpass-frontend'
+    container_name: duckpass-frontend
+    ports:
+      - "8000:8000"
+    networks:
+      - duckpass-net
+  api:
+    image: 'duckpass-backend'
+    container_name: duckpass-backend
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - EMAIL_HOST=${EMAIL_HOST} 
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - HIBP_API_KEY=${HIBP_API_KEY}
+      - SITE=${SITE}
+      - API=${API}
+    ports:
+      - "8001:8001"
+    networks:
+      - duckpass-net

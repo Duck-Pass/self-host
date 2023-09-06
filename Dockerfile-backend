@@ -1,0 +1,14 @@
+FROM python:3.11
+
+WORKDIR /app
+
+RUN apt-get update
+RUN apt-get install -y git
+
+RUN git clone https://github.com/Duck-Pass/backend.git .
+RUN git checkout -b dev origin/dev
+RUN git pull
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt 
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
