@@ -17,6 +17,11 @@ services:
       - ./database.sql:/docker-entrypoint-initdb.d/stage1.sql
     networks:
       - duckpass-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   web:
     image: 'duckpass-frontend'
     container_name: duckpass-frontend
@@ -40,6 +45,9 @@ services:
       - HIBP_API_KEY=${HIBP_API_KEY}
       - SITE=${SITE}
       - API=${API}
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8001:8001"
     networks:
