@@ -3,6 +3,8 @@
 Requirements:
 - Docker
 
+First things first, clone this repo.
+
 Build the images:
 
 ```
