@@ -18,7 +18,7 @@ Setup the environment:
 cp .env.example .env
 ```
 
-2. Modify the `.env.` with your desired parameters, some of them are already configured
+2. Modify the `.env` with your desired parameters, some of them are already configured
 to match the `docker-compose.yml`
 
 3. If you need to modify the API url in the front-end, change `api_url` directly in the Dockerfile.
